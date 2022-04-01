@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+<!--  这里通过装配bean-->
+  <bean id="student123"
+    class="com.zhj6422.beanCode.model.Student">
+    <property name="id" value="123" />
+    <property name="name" value="KK123" />
+  </bean>
+
+  <bean id="student100"
+    class="com.zhj6422.beanCode.model.Student">
+    <property name="id" value="100" />
+    <property name="name" value="KK100" />
+  </bean>
+
+  <bean id="class1" class="com.zhj6422.beanCode.model.Klass">
+    <property name="students">
+      <list>
+        <ref bean="student100" />
+        <ref bean="student123" />
+      </list>
+    </property>
+  </bean>
+
+  <bean id="school" class="com.zhj6422.beanCode.model.School"></bean>
+
+  <context:component-scan base-package="com.zhj6422.beanCode.*" />
+
+  <bean id="aop1" class="com.zhj6422.beanCode.Aop1" />
+
+<!--  开启切面-->
+  <aop:aspectj-autoproxy  />
+
+  <aop:config>
+    <aop:pointcut expression="execution(* com.zhj6422.beanCode.aop.*.*(..))" id="p1" /> <!--配置切点，这里扫描aop文件夹中的所有类和方法，里面有ISchool，针对School做前置、后置和环绕-->
+    <aop:aspect ref="aop1"> <!--切面 -->
+      <aop:around method="around" pointcut-ref="p1" />
+      <aop:before method="startTransaction" pointcut-ref="p1" /> <!--前置通知-->
+      <aop:after-returning method="commitTransaction" pointcut-ref="p1"/> <!--后置通知-->
+    </aop:aspect>
+  </aop:config>
+
+
+
+
+</beans>
