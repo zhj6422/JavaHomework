@@ -52,4 +52,4 @@
 2. 创建[ContextHolder](./DSDemo/src/main/java/com/zhj6422/dsdemo/config/DatabaseContextHolder.java)，用于切换数据源；创建[RoutingDataSource](./DSDemo/src/main/java/com/zhj6422/dsdemo/config/RoutingDataSource.java)类继承自AbstractRoutingDataSource；配置[DataSourceConfig](./DSDemo/src/main/java/com/zhj6422/dsdemo/config/DataSourceConfig.java)和[MybatisConfig](./DSDemo/src/main/java/com/zhj6422/dsdemo/config/MybatisConfig.java)
 3. 创建[注解](./DSDemo/src/main/java/com/zhj6422/dsdemo/annotation)以及配置[AOP](./DSDemo/src/main/java/com/zhj6422/dsdemo/aspect)
 4. 创建[entity](./DSDemo/src/main/java/com/zhj6422/dsdemo/entity)、[dao](./DSDemo/src/main/java/com/zhj6422/dsdemo/dao/)、[service](./DSDemo/src/main/java/com/zhj6422/dsdemo/service/)
-5. [测试](.\DSDemo\src\test\java\com\zhj6422\dsdemo)
+5. [测试](./DSDemo/src/test/java/com/zhj6422/dsdemo)
