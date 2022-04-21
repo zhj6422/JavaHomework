@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     `create_time` int NOT NULL,
     `update_time` int NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `commodity` (
     `id` int NOT NULL AUTO_INCREMENT,
@@ -34,19 +34,19 @@ CREATE TABLE IF NOT EXISTS `commodity` (
     `create_time` int NOT NULL,
     `update_time` int NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-CREATE TABLE IF NOT EXISTS `order` (
-    `id` int NOT NULL AUTO_INCREMENT,
-    `user_id` int NOT NULL,
-    `commodities` varchar(21812) NOT NULL,
+CREATE TABLE IF NOT EXISTS `orders` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `user_id` bigint NOT NULL,
+    `commodities` varchar(10240) NOT NULL,
     `order_price` int NOT NULL,
     `status` int NOT NULL,
-    `create_time` int NOT NULL,
-    `update_time` int NOT NULL,
+    `create_time` bigint NOT NULL,
+    `update_time` bigint NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
 
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `order` (
   
   INSERT INTO `commodity` (name, price, stock, create_time, update_time) VALUES ("书包", 100, 900, unix_timestamp(now()) , unix_timestamp(now()));
   
-  INSERT INTO `order`(`user_id`, commodities, order_price, status, create_time, update_time) VALUES (1, "书包", 100, 1, unix_timestamp(now()) , unix_timestamp(now()));
+  INSERT INTO `orders`(`user_id`, commodities, order_price, status, create_time, update_time) VALUES (1, "{'书包': 2, '课本'：1}", 100, 1, unix_timestamp(now()) , unix_timestamp(now()));
   ```
 
 - 删除数据
