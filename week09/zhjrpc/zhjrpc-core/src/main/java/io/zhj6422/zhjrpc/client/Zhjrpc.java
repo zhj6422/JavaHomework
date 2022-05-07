@@ -9,10 +9,17 @@ import io.zhj6422.zhjrpc.api.ZhjrpcRequest;
 import io.zhj6422.zhjrpc.api.ZhjrpcResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
+import io.zhj6422.zhjrpc.exception.ZhjrpcException;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.implementation.InvocationHandlerAdapter;
+import net.bytebuddy.matcher.ElementMatchers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -41,11 +48,39 @@ public final class Zhjrpc {
 
   }
 
+  private static final ConcurrentHashMap servicesMap = new ConcurrentHashMap();
   public static <T> T create(final Class<T> serviceClass, final String url, Filter... filters) {
-
     // 0. 替换动态代理 -> 字节码生成
-    return (T) Proxy.newProxyInstance(Zhjrpc.class.getClassLoader(), new Class[]{serviceClass}, new ZhjrpcInvocationHandler(serviceClass, url, filters));
+//    return (T) Proxy.newProxyInstance(Zhjrpc.class.getClassLoader(), new Class[]{serviceClass}, new ZhjrpcInvocationHandler(serviceClass, url, filters));
+    T service = null;
+    try {
+      service = (T)servicesMap.putIfAbsent(serviceClass, creatBytecodeGenerateProxy(serviceClass, url));
+    } catch (NoSuchMethodException e) {
+      throw new ZhjrpcException(e);
+    } catch (InvocationTargetException e) {
+      throw new ZhjrpcException(e);
+    } catch (InstantiationException e) {
+      throw new ZhjrpcException(e);
+    } catch (IllegalAccessException e) {
+      throw new ZhjrpcException(e);
+    }
+    if(service == null){
+      service = (T) servicesMap.get(serviceClass);
+    }
+    return service;
+  }
 
+  private static <T> T creatBytecodeGenerateProxy(Class<T> serviceClass, String url) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+   return (T) new ByteBuddy()
+           .subclass(Object.class)
+           .implement(serviceClass)
+           .method(ElementMatchers.any())
+           .intercept(InvocationHandlerAdapter.of(new Zhjrpc.ZhjrpcInvocationHandler(serviceClass, url)))
+           .make()
+           .load(Zhjrpc.class.getClassLoader())
+           .getLoaded()
+           .getDeclaredConstructor()
+           .newInstance();
   }
 
   public static class ZhjrpcInvocationHandler implements InvocationHandler {
@@ -85,14 +120,17 @@ public final class Zhjrpc {
         }
       }
 
-      ZhjrpcResponse response = post(request, url);
+//      ZhjrpcResponse response = post(request, url);
+      ZhjrpcResponse response = NettyClient.rpcCall(request,url);
 
       // 加filter地方之三
       // Student.setTeacher("cuijing");
 
       // 这里判断response.status，处理异常
       // 考虑封装一个全局的RpcfxException
-
+      if(!response.isStatus()){
+        throw new Throwable(response.getException());
+      }
       return JSON.parse(response.getResult().toString());
     }
 

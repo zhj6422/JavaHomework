@@ -4,4 +4,6 @@ public interface ZhjrpcResolver {
 
     Object resolve(String serviceClass);
 
+    <T> T resolve(Class<T> klass);
+
 }

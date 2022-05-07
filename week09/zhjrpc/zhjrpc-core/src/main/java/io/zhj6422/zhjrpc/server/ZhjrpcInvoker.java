@@ -5,6 +5,8 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import io.zhj6422.zhjrpc.api.ZhjrpcResolver;
 import io.zhj6422.zhjrpc.api.ZhjrpcRequest;
 import io.zhj6422.zhjrpc.api.ZhjrpcResponse;
+import io.zhj6422.zhjrpc.exception.ZhjrpcException;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -22,7 +24,17 @@ public class ZhjrpcInvoker {
     String serviceClass = request.getServiceClass();
 
     // 作业1：改成泛型和反射
-    Object service = resolver.resolve(serviceClass);//this.applicationContext.getBean(serviceClass);
+//    Object service = resolver.resolve(serviceClass);//this.applicationContext.getBean(serviceClass);
+    Class klass = null;
+    try { // 通过反射拿到Class
+      klass = Class.forName(serviceClass);
+    } catch (ClassNotFoundException e) {
+      response.setException(new ZhjrpcException(e));
+      response.setStatus(false);
+      e.printStackTrace();
+      return response;
+    }
+    Object service = resolver.resolve(klass);
 
     try {
       Method method = resolveMethodFromClass(service.getClass(), request.getMethod());
