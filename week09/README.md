@@ -172,4 +172,14 @@
 
 - 尝试使用 Netty+HTTP 作为 client 端传输方式。
 
-  新建[NettyClient.java]()和[RpcHttpClientHandler.java]()，并在Zhjrpc中调用NettyClient进行网络请求
+  新建[NettyClient.java](https://github.com/zhj6422/JavaHomework/blob/main/week09/zhjrpc/zhjrpc-core/src/main/java/io/zhj6422/zhjrpc/client/NettyClient.java)和[RpcHttpClientHandler.java](https://github.com/zhj6422/JavaHomework/blob/main/week09/zhjrpc/zhjrpc-core/src/main/java/io/zhj6422/zhjrpc/client/RpcHttpClientHandler.java)，并在Zhjrpc中调用NettyClient进行网络请求
+
+  ```java
+  ZhjrpcResponse response = NettyClient.rpcCall(request,url);
+  if(!response.isStatus()){
+      throw new Throwable(response.getException());
+  }
+  return JSON.parse(response.getResult().toString());
+  ```
+
+  
