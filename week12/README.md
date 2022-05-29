@@ -135,3 +135,57 @@
 
 
 **6.（必做）**搭建 ActiveMQ 服务，基于 JMS，写代码分别实现对于 queue 和 topic 的消息生产和消费，代码提交到 github。
+
+- 创建连接与会话
+
+  ```java
+  // 创建连接和会话
+  ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://127.0.0.1:61616");
+  ActiveMQConnection conn = (ActiveMQConnection) factory.createConnection();
+  conn.start();
+  Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+  ```
+
+- 根据使用queue还是topic，创建Destination
+
+  ```java
+  Destination destination = new ActiveMQTopic("test.topic");
+  Destination destination = new ActiveMQQueue("test.queue");
+  ```
+
+- 由destination创建消费者，并绑定监听器，监听器对MQ获取的信息进行处理
+
+  ```java
+  // 创建消费者
+  MessageConsumer consumer = session.createConsumer(destination);
+  final AtomicInteger count = new AtomicInteger(0);
+  MessageListener listener = new MessageListener() {
+    public void onMessage(Message message) {
+      try {
+        // 打印所有的消息内容
+        System.out.println(count.incrementAndGet() + " => receive from " + destination.toString() + ": " + message);
+      } catch (Exception e) {
+        e.printStackTrace(); // 不要吞任何这里的异常，
+      }
+    }
+  };
+  // 绑定消息监听器
+  consumer.setMessageListener(listener);
+  ```
+
+- 由destination创建生产者，向MQ里塞消息，并等待20s
+
+  ```java
+   // 创建生产者，生产100个消息
+  MessageProducer producer = session.createProducer(destination);
+  int index = 0;
+  while (index++ < 100) {
+    TextMessage message = session.createTextMessage(index + " message.");
+    producer.send(message);
+  }
+  Thread.sleep(20000);
+  session.close();
+  conn.close();
+  ```
+
+  
