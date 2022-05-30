@@ -1,4 +1,0 @@
-[2022-05-30 14:53:53,023] INFO [Controller id=1001 epoch=2] Sending UpdateMetadata request to brokers HashSet(1001, 1003) for 0 partitions (state.change.logger)
-[2022-05-30 14:53:54,381] INFO [Controller id=1001 epoch=2] Sending UpdateMetadata request to brokers HashSet(1001, 1003) for 0 partitions (state.change.logger)
-[2022-05-30 14:53:54,382] INFO [Controller id=1001 epoch=2] Sending UpdateMetadata request to brokers HashSet(1002) for 0 partitions (state.change.logger)
-[2022-05-30 14:54:29,641] INFO [Controller id=1001 epoch=3] Sending UpdateMetadata request to brokers HashSet(1001, 1002, 1003) for 0 partitions (state.change.logger)

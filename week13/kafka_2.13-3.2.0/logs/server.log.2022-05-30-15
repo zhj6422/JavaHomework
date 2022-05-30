@@ -1,6 +1,0 @@
-[2022-05-30 17:07:51,582] INFO [Controller id=1, targetBrokerId=2] Node 2 disconnected. (org.apache.kafka.clients.NetworkClient)
-[2022-05-30 17:07:51,582] INFO [Controller id=1, targetBrokerId=3] Node 3 disconnected. (org.apache.kafka.clients.NetworkClient)
-[2022-05-30 17:07:51,582] INFO [Controller id=1, targetBrokerId=1] Node 1 disconnected. (org.apache.kafka.clients.NetworkClient)
-[2022-05-30 17:18:36,906] INFO [Controller id=1, targetBrokerId=3] Node 3 disconnected. (org.apache.kafka.clients.NetworkClient)
-[2022-05-30 17:18:36,906] INFO [Controller id=1, targetBrokerId=1] Node 1 disconnected. (org.apache.kafka.clients.NetworkClient)
-[2022-05-30 17:18:36,906] INFO [Controller id=1, targetBrokerId=2] Node 2 disconnected. (org.apache.kafka.clients.NetworkClient)
